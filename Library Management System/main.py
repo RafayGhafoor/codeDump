@@ -11,18 +11,20 @@ members_by_house = {"Gryffindor": [], "Hufflepuff": [], "Ravenclaw": [], "Slythe
 def sort_dict(dict_in):
     dict(sorted(dict_in.items(), key=lambda item: item[1]))
 
+#NB title=Hogwarts a History,author=Bathilda 
+
 def hogwarts_library(contents):
     content_by_line = contents.split('\n')
     for command in content_by_line:
         commaand_code = command[:2].upper()
         if command_code == "NB":
-            command_nb(command[3:])
+            command_nb(command[4:])
         elif command_code == "LI":
             command_li()
         elif command_code == "DB":
-            command_db(command[3:])
+            command_db(command[4:])
         elif commaand_code == "FB":
-            command_fb(command[3:])
+            command_fb(command[4:])
         elif command_code == "AS":
             command_as()
         elif commaand_code == "LM":
@@ -31,30 +33,26 @@ def hogwarts_library(contents):
             command_pl()
 
 
-def command_nb(command):
-    global book_collection
-    global Book
+def command_nb(command="title=Hogwarts a History,author=Bathilda Bagshot,year_published=1947,subject=Historical,section=Non-Restricted"):
+    # global book_collection
+    # global Book
     args = command.split(',')
-    for i in range(len(args)):
-        if i == 0:
-            args[i] = args[i].replace('title=','')
-        elif i == 1:
-            args[i] = args[i].replace('author=','')
-        elif i == 2:
-            args[i] = args[i].replace('year_published=','')
-        elif i == 3:
-            args[i] = args[i].replace('subject=','')
-        elif i == 4:
-            args[i] = args[i].replace('section=','')
-    book_obj = Book(args[0],args[1],args[2],args[3],args[4])
+    info = {}
+
+    for tokens in args:
+        heading, content = tokens.split('=')
+        info[heading] = content
+
+    book_obj = Book(info["title"], info["author"], info["year_published"], info["subject"], info["subject"], info["section"])
     book_collection[book_obj.title] = book_obj
 
 def command_li():
     global book_collection
     book_collection = sort_dict(book_collection)
+    print("*********************LIBRARY INVENTORY**********************")
     print("Number of books available: ",len(book_collection))
+    print("------------------------------------")
     for book in book_collection:
-        print("------------------------------------")
         print("Title: ", book.title)
         print("Author: ", book.author)
         print("Date: ", book.year_published)
@@ -126,10 +124,20 @@ def command_fb(command):
                     for book in book_collection:
                         if book.section == section_fb:
                             searched[book.title] = book
-        if len(searched) > 0:
-            print("Your search criteria matched ", len(searched), " books")
-            for book in searched:
+        print("************************BOOK SEARCH*************************")
+        print("Number of books found:  ", len(searched))
+        print("------------------------------------")
+        if len(args == 0):
+            for book in book_collection:
+                print("Title: ", book.title)
+                print("Author: ", book.author)
+                print("Date: ", book.year_published)
+                print("Subject: ", book.subject)
+                print("Section: ", book.section)
                 print("------------------------------------")
+
+        elif len(searched) > 0:
+            for book in searched:
                 print("Title: ", book.title)
                 print("Author: ", book.author)
                 print("Date: ", book.year_published)
@@ -175,3 +183,4 @@ def command_pl(command):
     print(command)
 
 if __name__ == "__main__": 
+    command_nb()
