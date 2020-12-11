@@ -122,7 +122,6 @@ def command_lm():
 
 def command_pl(command):
     print(command)
-    input()
 
 
 def get_file_path(stage_path, name="Stage1Commands.txt"):
